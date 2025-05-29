@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, local-runner]
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -29,11 +29,9 @@ jobs:
       
       - name: Deploy Cluster Local
         run: |
-         echo "[+] Exportando KUBECONFIG localmente..."
-         export KUBECONFIG=$HOME/.kube/config
-         echo "[+] Atualizando deployment no minikube... "
-         kubectl delete deployment agenda-medica-deployment --ignore-not-found
-         kubectl apply -f k8s/deployment.yaml
-         kubectl apply -f k8s/service.yaml
-         echo "Frontend atualizado no cluster local"
-
+         echo "[+] Usando kubeconfig do Minikube..."
+          export KUBECONFIG="$(minikube kubeconfig)"
+          kubectl delete deployment agenda-medica --ignore-not-found
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          echo "✅ Frontend atualizado no cluster local"
