@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agenda-medica
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agenda-medica
+  template:
+    metadata:
+      labels:
+        app: agenda-medica
+    spec: 
+      containers: 
+      - name: agenda-medica
+        image: mpavani/agenda-medica:latest
+        ports: 
+        - containerPort: 80
