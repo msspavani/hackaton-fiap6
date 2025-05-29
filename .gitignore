@@ -6,3 +6,6 @@ frontend/agenda-medica/test-results/
 
 # Ignorar banco fake do JSON Server
 json-server/db.json
+../json-server/db.json
+./json-server/db.json
+json-server/
