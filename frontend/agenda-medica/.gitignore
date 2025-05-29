@@ -25,3 +25,7 @@ dist-ssr
 # Ignorar binário tailwind baixado manualmente
 frontend/agenda-medica/tools/tailwind/tailwindcss
 frontend/agenda-medica/tools/tailwind/tools/tailwind/tailwindcss
+frontend/agenda-medica/tools/tailwind/tailwindcss
+test-results/
+../json-server/db.json
+
