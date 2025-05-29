@@ -21,6 +21,8 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest
       - name: Deploy Cluster Local
         run: |
+         echo "[+] Exportando KUBECONFIG localmente..."
+         export KUBECONFIG=$HOME/.kube/config
          echo "[+] Atualizando deployment no minikube... "
          kubectl delete deployment agenda-medica-deployment --ignore-not-found
          kubectl apply -f k8s/deployment.yaml
