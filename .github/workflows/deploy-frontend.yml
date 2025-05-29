@@ -19,3 +19,11 @@ jobs:
           cd frontend/agenda-medica
           docker build -t ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest . 
           docker push ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest
+      - name: Deploy Cluster Local
+        run: |
+         echo "[+] Atualizando deployment no minikube... "
+         kubectl delete deployment agenda-medica-deployment --ignore-not-found
+         kubectl apply -f k8s/deployment.yaml
+         kubectl apply -f k8s/service.yaml
+         echo "Frontend atualizado no cluster local"
+
