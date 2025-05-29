@@ -1,3 +1,8 @@
+# Ignorar binário do Tailwind (se ainda existir)
 frontend/agenda-medica/tools/tailwind/tailwindcss
-test-results/
-../json-server/db.json
+
+# Ignorar resultados de teste do vitest/playwright
+frontend/agenda-medica/test-results/
+
+# Ignorar banco fake do JSON Server
+json-server/db.json
