@@ -1,1 +1,3 @@
 frontend/agenda-medica/tools/tailwind/tailwindcss
+test-results/
+../json-server/db.json
