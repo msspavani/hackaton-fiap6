@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: [self-hosted, linux, local-runner]
+    runs-on: self-hosted
 
     steps:
       - name: Checkout do código
