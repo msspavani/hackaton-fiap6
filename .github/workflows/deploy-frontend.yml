@@ -7,6 +7,7 @@ on:
 jobs:
   build-and-push:
     runs-on: [self-hosted, linux, local-runner]
+
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -22,14 +23,14 @@ jobs:
       
       - name: 🔍 Diagnóstico KUBECONFIG
         run: |
-         echo "Usuário: $(whoami)"
-         echo "KUBECONFIG: $KUBECONFIG"
-         ls -la $HOME/.kube/config || echo "Arquivo de configuração não encontrado"
-         kubectl config current-context || echo "Contexto não encontrado"
+          echo "Usuário: $(whoami)"
+          echo "KUBECONFIG: $(minikube kubeconfig)"
+          kubectl config get-contexts
+          kubectl config current-context
       
       - name: Deploy Cluster Local
         run: |
-         echo "[+] Usando kubeconfig do Minikube..."
+          echo "[+] Usando kubeconfig do Minikube..."
           export KUBECONFIG="$(minikube kubeconfig)"
           kubectl delete deployment agenda-medica --ignore-not-found
           kubectl apply -f k8s/deployment.yaml
