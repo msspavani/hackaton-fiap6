@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:e2e": "VITE_API_BASE_URL=http://localhost:3000 playwright test"
+    "test:e2e:headed": "playwright test --headed --debug"
   },
   "dependencies": {
+    "axios": "^1.9.0",
     "faker-br": "^0.4.1",
     "formik": "^2.4.6",
     "js-brasil": "^2.6.4",
@@ -26,6 +29,7 @@
     "@tailwindcss/postcss": "^4.1.7",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.15.24",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
@@ -40,6 +44,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.4"
   }
 }

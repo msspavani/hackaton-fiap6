@@ -1,9 +1,6 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-
+import axios from 'axios';
 
 const medicoSchema = Yup.object({
   nome: Yup.string().required('Nome é obrigatório'),
@@ -13,13 +10,26 @@ const medicoSchema = Yup.object({
   telefone: Yup.string().required('Telefone obrigatório'),
   cpf: Yup.string().nullable(),
   nascimento: Yup.date().required('Data de nascimento é obrigatória'),
-  endereco: Yup.string().required('Endereço é obrigatório'),
-
+  cep: Yup.string().required('CEP é obrigatório'),
+  rua : Yup.string().required('Rua é obrigatória'),
+  numero : Yup.string().required('Numero é obrigatório'),
+  complemento : Yup.string(),
+  bairro : Yup.string().required('O Bairro é obrigatório'),
+  cidade : Yup.string().required('A Cidade é obrigatória'),
 
 });
 
 
+const getApiBaseUrl = () => {
+  return import.meta.env?.VITE_API_BASE_URL ?? 'http://localhost:3000';
+};
 
+const apiBaseUrl = getApiBaseUrl();
+
+const buscarEnderecoPorCEP = async(cep: string) => {
+  const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+  return response.data;
+}
 
 export function MedicoForm() {
   const formik = useFormik({
@@ -31,7 +41,13 @@ export function MedicoForm() {
       telefone: '',
       cpf: '',
       nascimento: '',
-      endereco: '',
+      cep: '',
+      rua: '',
+      numero: '',
+      complemento: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
     },
     validationSchema: medicoSchema,
     onSubmit: async (values) => {
@@ -56,6 +72,21 @@ export function MedicoForm() {
       }
     },
   });
+
+
+const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const cep = e.target.value.replace(/\D/g, '');
+  if(cep.length === 8){
+    const endereco = await buscarEnderecoPorCEP(cep);
+    if(!endereco.erro){
+      formik.setFieldValue('rua', endereco.logradouro || '');
+      formik.setFieldValue('bairro', endereco.bairro || '');
+      formik.setFieldValue('cidade', endereco.localidade || '');
+      formik.setFieldValue('estado', endereco.estado || '');
+    }
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -132,13 +163,57 @@ export function MedicoForm() {
 
 
 
-          <input name="endereco" 
-                 placeholder="Endereço completo" 
-                 onChange={formik.handleChange} 
-                 value={formik.values.endereco} className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  {formik.touched.endereco && formik.errors.endereco && (
-                  <p className='text-red-500 text-sm'>{formik.errors.endereco}</p>
-                 )}
+          <input
+            name="cep"
+            placeholder="CEP"
+            value={formik.values.cep}
+            onChange={formik.handleChange}
+            onBlur={handleCepBlur}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="rua"
+            placeholder="Rua"
+            value={formik.values.rua}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="numero"
+            placeholder="Número"
+            value={formik.values.numero}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="complemento"
+            placeholder="Complemento"
+            value={formik.values.complemento}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="bairro"
+            placeholder="Bairro"
+            value={formik.values.bairro}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="cidade"
+            placeholder="Cidade"
+            value={formik.values.cidade}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+          <input
+            name="estado"
+            placeholder="Estado"
+            value={formik.values.estado}
+            onChange={formik.handleChange}
+            className="w-full border p-3 rounded"
+          />
+
 
 
           
