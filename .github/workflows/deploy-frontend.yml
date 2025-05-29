@@ -19,6 +19,14 @@ jobs:
           cd frontend/agenda-medica
           docker build -t ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest . 
           docker push ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest
+      
+      - name: 🔍 Diagnóstico KUBECONFIG
+        run: |
+         echo "Usuário: $(whoami)"
+         echo "KUBECONFIG: $KUBECONFIG"
+         ls -la $HOME/.kube/config || echo "Arquivo de configuração não encontrado"
+         kubectl config current-context || echo "Contexto não encontrado"
+      
       - name: Deploy Cluster Local
         run: |
          echo "[+] Exportando KUBECONFIG localmente..."
