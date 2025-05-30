@@ -12,6 +12,22 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
+      - name: Instalar Dependências
+        run: |
+          cd frontend/agenda-medica
+          npm install
+
+      - name: Testes de unidade
+        run: |
+          cd frontend/agenda-medica
+          npm run test:unit
+
+      - name: Testes E2E
+        run: |
+         cd frontend/agenda-medica
+         npx playwright install --with-deps
+         npm run test:e2e
+          
       - name: Login Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
