@@ -22,17 +22,9 @@ jobs:
           cd frontend/agenda-medica
           npm run test:unit
 
-      - name: Instalar dependências do json-server
+      - name: Iniciar json-server com npx
         run: |
-          cd frontend/json-server
-          npm install
-
-      - name: Instalar json-server globalmente
-        run: npm install -g json-server
-
-      - name: Iniciar json-server em background
-        run: |
-          nohup json-server --watch frontend/json-server/db.json --port 3000 > /dev/null 2>&1 &
+          npx json-server --watch frontend/json-server/db.json --port 3000 &
 
 
       - name: Esperar json-server responder
