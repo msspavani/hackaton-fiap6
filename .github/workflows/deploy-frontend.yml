@@ -22,15 +22,24 @@ jobs:
           cd frontend/agenda-medica
           npm run test:unit
 
-      - name: Iniciar Json-Server(testes E2E)
+      - name: Instalar dependências do json-server
         run: |
-         npm install -g json-server
-         json-server --watch frontend/json-server/db.json --port 3000 &
-      - name: Esperar Json-Server responder
-        run:  |
-         for i in {1..10}; do
-           curl http://localhost:3000 || sleep 2
-         done
+          cd frontend/json-server
+          npm install
+
+      - name: Iniciar json-server em background
+        run: |
+          cd frontend/json-server
+          nohup npx json-server --watch db.json --port 3000 > /dev/null 2>&1 &
+
+      - name: Esperar json-server responder
+        run: |
+          for i in {1..10}; do
+            curl http://localhost:3000 && break
+            echo "Aguardando o json-server iniciar..."
+            sleep 2
+          done
+
          
       - name: Testes E2E
         run: |
