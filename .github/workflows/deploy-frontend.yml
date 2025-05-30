@@ -27,10 +27,13 @@ jobs:
           cd frontend/json-server
           npm install
 
+      - name: Instalar json-server globalmente
+        run: npm install -g json-server
+
       - name: Iniciar json-server em background
         run: |
-          cd frontend/json-server
-          nohup npx json-server --watch db.json --port 3000 > /dev/null 2>&1 &
+          nohup json-server --watch frontend/json-server/db.json --port 3000 > /dev/null 2>&1 &
+
 
       - name: Esperar json-server responder
         run: |
