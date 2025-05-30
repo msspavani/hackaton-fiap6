@@ -21,18 +21,15 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest . 
           docker push ${{ secrets.DOCKER_USERNAME }}/agenda-medica:latest
       
-      - name: 🔍 Diagnóstico KUBECONFIG
-        run: |
-          echo "Usuário: $(whoami)"
-          echo "KUBECONFIG: $(minikube kubeconfig)"
-          kubectl config get-contexts
-          kubectl config current-context
-      
       - name: Deploy Cluster Local
+        working-directory: frontend/agenda-medica
         run: |
           echo "[+] Usando kubeconfig do Minikube..."
-          export KUBECONFIG="$(minikube kubeconfig)"
+          export KUBECONFIG=$HOME/.kube/config
+
+          echo "[+] Atualizando deployment no Minikube..."
           kubectl delete deployment agenda-medica --ignore-not-found
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
           echo "✅ Frontend atualizado no cluster local"
+
