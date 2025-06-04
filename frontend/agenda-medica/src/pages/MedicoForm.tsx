@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 const medicoSchema = Yup.object({
   nome: Yup.string().required('Nome é obrigatório'),
@@ -26,12 +27,15 @@ const getApiBaseUrl = () => {
 
 const apiBaseUrl = getApiBaseUrl();
 
+
 const buscarEnderecoPorCEP = async(cep: string) => {
   const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
   return response.data;
 }
 
 export function MedicoForm() {
+
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       nome: '',
@@ -51,24 +55,39 @@ export function MedicoForm() {
     },
     validationSchema: medicoSchema,
     onSubmit: async (values) => {
-      try{
+      try {
         const response = await fetch(`${apiBaseUrl}/medicos`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-
           body: JSON.stringify(values),
         });
-
-        if(!response.ok) throw new Error('Erro ao cadastrar médico');
-
+    
+        if (!response.ok) {
+          throw new Error(`Erro ao cadastrar médico (HTTP ${response.status})`);
+        }
+    
+        let result: any = {};
+        try {
+          result = await response.json(); // Pode lançar erro se estiver vazio
+        } catch {
+          console.warn('⚠️ Resposta sem JSON, usando fallback');
+        }
+    
         alert('Médico cadastrado com sucesso!');
         formik.resetForm();
-      }
-      catch(error)
-      {
-        alert('Falha ao enviar dados: ' + error);
+    
+        navigate("/definir-senha", {
+          state: {
+            crm: result?.crm ?? values.crm,
+            token: result?.token ?? 'token-fake',
+          },
+        });
+    
+      } catch (error: any) {
+        console.error('❌ Erro no envio do formulário:', error);
+        alert('Falha ao enviar dados: ' + (error?.message || 'Erro desconhecido'));
       }
     },
   });
